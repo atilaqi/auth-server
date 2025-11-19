@@ -43,4 +43,11 @@ public class UserEntity {
     public void preUpdate() {
         updatedAt = Instant.now();
     }
+
+    @PrePersist
+    public void prePersist() {
+        Instant now = Instant.now();
+        createdAt = now;
+        updatedAt = now;
+    }
 }

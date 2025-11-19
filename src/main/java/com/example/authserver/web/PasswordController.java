@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,14 +24,16 @@ public class PasswordController {
     }
 
     @PostMapping("/set-password")
-    public String setPassword(@AuthenticationPrincipal UserDetails principal,
+    public String setPassword(@AuthenticationPrincipal OidcUser oidcUser,
                               @RequestParam String newPassword,
                               Model model) {
-        if (principal == null) {
+        if (oidcUser == null) {
             return "redirect:/login";
         }
 
-        UserEntity user = userRepository.findByUsername(principal.getUsername())
+        String email = oidcUser.getEmail(); // or oidcUser.getPreferredUsername(), etc.
+
+        UserEntity user = userRepository.findByUsername(email)
                 .orElseThrow(() -> new IllegalStateException("User not found"));
 
         user.setPasswordHash(passwordEncoder.encode(newPassword));
@@ -39,4 +42,5 @@ public class PasswordController {
         model.addAttribute("message", "Password set successfully");
         return "set-password";
     }
+
 }

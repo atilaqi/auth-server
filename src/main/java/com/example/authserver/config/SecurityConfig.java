@@ -42,6 +42,7 @@ public class SecurityConfig {
     // Application endpoints (login page, home, etc.)
     @Bean
     @Order(2)
+    @Profile("federated")
     public SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
 
         http
