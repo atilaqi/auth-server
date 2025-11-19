@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+</head>
+<body>
+<h1>Authorization Server Home</h1>
+
+<div th:if="${principal == null}">
+    <p>You are not logged in.</p>
+    <a th:href="@{/login}">Login</a>
+</div>
+
+<div th:if="${principal != null}">
+    <p>Logged in as: <span th:text="${principal}"></span></p>
+    <a th:href="@{/set-password}">Set/Change password</a><br/>
+    <a th:href="@{/logout}">Logout</a>
+</div>
+
+</body>
+</html>
