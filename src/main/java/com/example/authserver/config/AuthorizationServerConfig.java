@@ -36,6 +36,8 @@ public class AuthorizationServerConfig {
                 .redirectUri("http://localhost:8081/login/oauth2/code/my-client")
                 .scope("openid")
                 .scope("profile")
+                .scope("message.read")   // 👈 add this
+                .scope("message.write")  // 👈 and this (if you want POST)
                 .build();
 
         return new InMemoryRegisteredClientRepository(client);
