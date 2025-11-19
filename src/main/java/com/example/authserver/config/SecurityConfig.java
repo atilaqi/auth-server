@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.web.*;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @RequiredArgsConstructor
@@ -57,8 +58,19 @@ public class SecurityConfig {
                         .loginPage("/login") // same login page for Google
                 )
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/").permitAll()
-                );
+                        // accept GET /logout (for RP-initiated logout from demo-client)
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            String redirect = request.getParameter("post_logout_redirect_uri");
+                            if (redirect == null || redirect.isBlank()) {
+                                redirect = "/";
+                            }
+                            response.sendRedirect(redirect);
+                        })
+                        .permitAll()
+                )
+                // optional: ignore CSRF for GET /logout
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/logout"));
 
         return http.build();
     }

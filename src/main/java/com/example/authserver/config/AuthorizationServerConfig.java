@@ -3,9 +3,10 @@ package com.example.authserver.config;
 import com.nimbusds.jose.jwk.*;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.client.*;
@@ -17,7 +18,10 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
 @Configuration
+@RequiredArgsConstructor
 public class AuthorizationServerConfig {
+
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
@@ -25,7 +29,7 @@ public class AuthorizationServerConfig {
         // Example: one client (your app that uses this auth server)
         RegisteredClient client = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("my-client-id")
-                .clientSecret("{noop}my-client-secret") // use PasswordEncoder in real setup
+                .clientSecret(passwordEncoder.encode("secret123")) // use PasswordEncoder in real setup
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)

@@ -4,6 +4,7 @@ import com.example.authserver.user.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +19,7 @@ import java.util.Collections;
 
 @Configuration
 @RequiredArgsConstructor
+@Profile("federated")
 public class FederatedIdentityConfig {
 
     private final UserRepository userRepository;
