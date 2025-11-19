@@ -27,9 +27,7 @@ spring:
     oauth2:
       client:
         registration:
-#          google:
-#            client-id:
-#            client-secret:
+
             scope:
               - openid
               - profile
